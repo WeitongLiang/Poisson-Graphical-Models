@@ -1,0 +1,59 @@
+[{
+  "data_format": "TSV", 
+  "access": "open", 
+  "associated_entities": [
+    {
+      "entity_submitter_id": "HCM-SANG-0265-C18-06A-01R-A78N-41", 
+      "entity_type": "aliquot", 
+      "case_id": "f8a9aab0-6017-483d-b053-9393c6a5af2d", 
+      "entity_id": "6d062f33-1cea-4ed9-84a4-859a0d7a959c"
+    }
+  ], 
+  "file_name": "ebb3ff74-8d01-49bf-ac44-44e9ff5c47bf.mirnaseq.mirnas.quantification.txt", 
+  "submitter_id": "7cd0068a-b1c5-4305-a9fd-08f2fb4f8277", 
+  "data_category": "Transcriptome Profiling", 
+  "analysis": {
+    "workflow_version": "20231108T2122Z", 
+    "input_files": [
+      {
+        "data_format": "BAM", 
+        "proportion_reads_mapped": 0.9855913082334306, 
+        "total_reads": 56023962, 
+        "access": "controlled", 
+        "file_name": "6d062f33-1cea-4ed9-84a4-859a0d7a959c_mirnaseq_gdc_realn.bam", 
+        "wgs_coverage": "Not Applicable", 
+        "proportion_base_mismatch": 0.005000957, 
+        "proportion_reads_duplicated": 0, 
+        "submitter_id": "d252d62b-d4ee-472f-870d-d40a34f04f7a", 
+        "data_category": "Sequencing Reads", 
+        "platform": "Illumina", 
+        "file_size": 1010606484, 
+        "created_datetime": "2024-04-02T12:06:00.821515-05:00", 
+        "average_base_quality": 36, 
+        "md5sum": "fe5e7924d092bd41d979c13c4b1ad7e9", 
+        "updated_datetime": "2024-07-12T14:21:22.363574-05:00", 
+        "file_id": "cfaa04b0-bccc-4adc-b044-06f09011d8b0", 
+        "pairs_on_diff_chr": 0, 
+        "data_type": "Aligned Reads", 
+        "average_insert_size": 0, 
+        "average_read_length": 25, 
+        "state": "released", 
+        "experimental_strategy": "miRNA-Seq"
+      }
+    ], 
+    "updated_datetime": "2024-07-12T14:21:22.363574-05:00", 
+    "workflow_link": "docker.osdc.io/ncigdc", 
+    "submitter_id": "ebb3ff74-8d01-49bf-ac44-44e9ff5c47bf_mirna_expression_workflow", 
+    "state": "released", 
+    "workflow_type": "BCGSC miRNA Profiling", 
+    "analysis_id": "b6c168b9-7b60-4dee-9439-1bc586e4ebfe", 
+    "created_datetime": "2024-04-02T13:51:00.500737-05:00"
+  }, 
+  "platform": "Illumina", 
+  "file_size": 51100, 
+  "md5sum": "4459aaab09690356c57b3c70c4953be8", 
+  "file_id": "353efa55-06d3-43a8-adf5-50f3219e9f14", 
+  "data_type": "miRNA Expression Quantification", 
+  "state": "released", 
+  "experimental_strategy": "miRNA-Seq"
+}]
