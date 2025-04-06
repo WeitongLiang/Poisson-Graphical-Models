@@ -1,0 +1,17 @@
+library(XMRF)
+data("brcadat")
+brca <- t(processSeq(t(brcadat), PercentGenes = 1))
+lambda <- 0.1 * lambdaMax(t(as.matrix(brca))) *
+  sqrt(log(nrow(brca)) / ncol(brca))
+brca.lpgm <- XMRF(brca,
+  method = "LPGM",
+  lambda.path = lambda, th = 0.005,
+  sth = 0.9
+)
+
+plotGML(brca.lpgm,
+  fn = "brcanet.gml",
+  weight = TRUE, vars = rownames(brca)
+)
+
+plot(brca.lpgm)
