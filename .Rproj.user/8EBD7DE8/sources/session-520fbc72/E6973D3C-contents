@@ -46,10 +46,11 @@ get_D <- function(sufficient_statistic, base_measure, tol = 1e-7) {
 
 # Perform the M-estimation
 learn_edge <- function(data, sufficient_statistic, log_normalization, lambda, threshold = 0.1) {
+  M <- 1e3
   p = nrow(data)
   THETA_prob <- matrix(0, nrow=p, ncol=p)
-  for (s in 1:100){
-    cat(paste("QPGM: learning edges ... in progress: ", floor(100*(s/100)), "%", collapse=""),"\r")
+  for (s in 1:M){
+    cat(paste("QPGM: learning edges ... in progress: ", round(100*(s/M), 2), "%", collapse=""),"\r")
     flush.console()
     THETA <- NULL
     for (i in 1:p){
@@ -84,9 +85,9 @@ learn_edge <- function(data, sufficient_statistic, log_normalization, lambda, th
       theta <- append(theta, 1, after = i-1)
       THETA <- rbind(THETA, theta)
     }
-    THETA_prob <- THETA_prob + (THETA>0.01)
+    THETA_prob <- THETA_prob + (abs(THETA)>0.01)
   }
-  return(THETA_prob/100)
+  return(THETA_prob/M)
 }
 
 D <- get_D(sufficient_statistic = B, base_measure = C)
