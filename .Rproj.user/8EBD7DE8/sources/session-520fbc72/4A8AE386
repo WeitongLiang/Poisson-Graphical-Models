@@ -1,0 +1,26 @@
+{
+    "id": "4A8AE386",
+    "path": "~/Documents/Duke University/Courses/STA 841 Categotrical Data Analysis/Poisson-Graphical-Models/PGM_from_zero/Relationship_n_vs_auc.R",
+    "project_path": "PGM_from_zero/Relationship_n_vs_auc.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1744044779252.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "26,16",
+        "scrollLine": "15"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1744045206,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1744045206132,
+    "read_only": false,
+    "read_only_alternatives": []
+}

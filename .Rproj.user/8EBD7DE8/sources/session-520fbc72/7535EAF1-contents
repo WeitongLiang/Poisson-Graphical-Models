@@ -1,0 +1,25 @@
+# Define the function B(Z; R0, R)
+B <- function(x, R0, R) {
+  ifelse(x <= R0, x,
+         ifelse(x > R0 & x <= R, 
+                -1/(2*(R-R0)) * x^2 + (R/(R-R0)) * x - (R0^2)/(2*(R-R0)),
+                (R0 + R)/2))
+}
+
+# Define R0 and R
+R0 <- 1
+R <- 2
+
+# Create a sequence of x values
+x_values <- seq(0, 3, length.out = 300)
+
+# Evaluate the function for each x value
+y_values <- B(x_values, R0, R)
+
+# Plot the function
+plot(x_values, y_values, type = "l", col = "black", lwd = 2,
+     xlab = "x", ylab = "B(Z; R0, R)",
+     main = "Plot of B(Z; R0, R) with R0 = 1 and R = 2"
+     )
+abline(v = c(R0, R), col = "red", lty = 2)
+legend("topright", legend = c("R0", "R"), col = "red", lty = 2, bty = "n")

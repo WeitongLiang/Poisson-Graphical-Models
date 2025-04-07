@@ -15,6 +15,21 @@
                 "type": 1,
                 "is_package_breakpoint": false,
                 "package_name": ""
+            },
+            {
+                "id": 11,
+                "path": "~/Documents/Duke University/Courses/STA 841 Categotrical Data Analysis/Poisson-Graphical-Models/PGM_from_zero/Relationship_n_vs_auc.R",
+                "line_number": 27,
+                "function_steps": "",
+                "function_name": "toplevel",
+                "state": 1,
+                "editor_state": 1,
+                "editor_line_number": 27,
+                "is_pending_debug_completion": false,
+                "needs_updated_steps": false,
+                "type": 1,
+                "is_package_breakpoint": false,
+                "package_name": ""
             }
         ]
     }

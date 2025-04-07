@@ -8,13 +8,6 @@ library(here)
 here::set_here()
 purrr::walk(list.files("./PGM_from_zero/helper_fns/", pattern = "*.R$", full.names=TRUE), source,.GlobalEnv)
 
-set.seed(1231)
-# simulate data
-sim <- XMRF.Sim(n = 200, p = 5, model = "TPGM", graph.type = "hub")
-simDat <- sim$X
-p <- nrow(simDat)
-n <- ncol(simDat)
-
 # Node-conditional distribution via GLM: P(Z) = exp(theta B(Z) - C(Z) - D(theta))
 B <- function(x) {
   return(x) # Canonical form of sufficient statistic
@@ -24,13 +17,21 @@ C <- function(x) {
   return(x^2) # Quadratic base measure
 }
 
-THETA = learn_edge(
-  method = "QPGM",
-  data = simDat,
-  sufficient_statistic = B,
-  base_measure = C,
-  lambda = 1e4,
-  M = 1
-)
-
-auc_roc_analysis(sim$B, THETA)
+# range of n
+N_range <- 20*(1:20)
+AUC_range <- numeric(length = length(N_range))
+p <- 10
+for (n in 1:length(N_range)) {
+  sim <- XMRF.Sim(n = n, p = 5, model = "TPGM", graph.type = "hub")
+  # learn edges
+  THETA = learn_edge(
+    method = "QPGM",
+    data = sim$X,
+    sufficient_statistic = B,
+    base_measure = C,
+    lambda = 1e4,
+    M = 50
+  )
+  # attach auc to store
+  AUC_range[n] <- auc_roc_analysis(sim$B, THETA)
+}
