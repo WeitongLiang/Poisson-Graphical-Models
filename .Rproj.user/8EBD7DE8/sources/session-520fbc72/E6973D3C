@@ -1,0 +1,27 @@
+{
+    "id": "E6973D3C",
+    "path": "~/Documents/Duke University/Courses/STA 841 Categotrical Data Analysis/Poisson-Graphical-Models/PGM_from_zero/QPGM.R",
+    "project_path": "PGM_from_zero/QPGM.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1743978326616.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "38,2",
+        "scrollLine": "27",
+        "docOutlineVisible": "0"
+    },
+    "folds": "14|18|16|0|\n18|18|20|0|\n47|96|89|0|\n",
+    "lastKnownWriteTime": 1743990833,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1743990833494,
+    "read_only": false,
+    "read_only_alternatives": []
+}
