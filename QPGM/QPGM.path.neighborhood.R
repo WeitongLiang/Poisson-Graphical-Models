@@ -1,6 +1,0 @@
-QPGM.path.neighborhood <- function(X, Y, nlams = 10, startb = 0, lambda = NULL) {
-  return(
-    PGM.path.neighborhood(X = X_expanded, Y = Y, nlams = nlams, startb = 0, lambda = NULL)
-  )
-}
-  
