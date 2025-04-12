@@ -1,4 +1,0 @@
-export(XMRF, XMRF.Sim, GMS, plotGML, processSeq, lambdaMax, plotNet)
-S3method(print, GMS)
-S3method(plot, GMS)
-useDynLib(XMRF)
