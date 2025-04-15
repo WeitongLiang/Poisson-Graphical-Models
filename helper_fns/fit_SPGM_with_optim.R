@@ -1,79 +1,124 @@
-# ===== Function: fit SPGM with optim() =====
 fit_Sublinear_Poisson_Graphical_Model_optim <- function(X, lambda, threshold = 1e-1){
-  #' Fit Sublinear Poisson Graphical Model
+  #' Fit Sublinear Poisson Graphical Model (SPGM)
   #' 
-  #' @param X a n-by-p matrix, where n is the number of samples, p is the number of nodes (variables)
-  #' @param lambda L1-regularization coefficient
-  #' @return p-by-p adjacency matrix indicating the edeges (1 means edge, 0 means no edge)
-  cat("Start training QPGM...")
+  #' @param X n-by-p count matrix (rows = samples, cols = variables)
+  #' @param lambda L1-penalty
+  #' @return p-by-p symmetric parameter matrix (or optionally binary adjacency matrix)
   
-  Sublinear <- function(x, R0, R){
-    if (x==0) {return(0)}
-    else if (x>=R) {
-      return((R+R0)/2)
-    } else {
-      return(
-        -1/(2*(R-R0))*x^2 + R/(R-R0)*x - R0^2/(2*(R-R0))
-      )
-    }
+  cat("Start training SPGM...\n")
+  
+  # ===== Sublinear sufficient statistic =====
+  B <- function(x, R0, R) {
+    out <- numeric(length(x))
+    
+    not_na <- !is.na(x)
+    
+    # Case 1: x <= R0
+    out[not_na & x <= R0] <- x[not_na & x <= R0]
+    
+    # Case 2: R0 < x < R
+    idx_middle <- not_na & x > R0 & x < R
+    out[idx_middle] <- -1 / (2 * (R - R0)) * x[idx_middle]^2 +
+      R / (R - R0) * x[idx_middle] -
+      R0^2 / (2 * (R - R0))
+    
+    # Case 3: x >= R
+    out[not_na & x >= R] <- (R + R0) / 2
+    
+    return(out)
   }
   
-  LogNormalizing_spgm <- function(th, R0, R){
-    part_1 <- sum(sapply(0:R0, function(n){exp(th*n)/factorial(n)}))
-    part_2 <- sum(sapply(R0+1:R, function(n){
-      exp((-1/(2*(R-R0))*n^2 + R/(R-R0)*n - R0^2/(2*(R-R0)))*th)/factorial(n)
-    }))
-    part_3 <- exp(th * ((R+R0)/2)) * (1-sum(sapply(0:R, function(n){1/factorial(n)})))
-    return(log(part_1 + part_2 + part_3))
+  
+  # ===== Log-normalizing constant (numerically approximated) =====
+  LogNormalizing_spgm <- function(th, R0, R) {
+    tryCatch({
+      n_vals <- 0:R
+      
+      B_vec <- numeric(length(n_vals))
+      B_vec[n_vals <= R0] <- n_vals[n_vals <= R0]
+      middle_idx <- n_vals > R0 & n_vals < R
+      B_vec[middle_idx] <- -1/(2*(R - R0)) * n_vals[middle_idx]^2 +
+        R / (R - R0) * n_vals[middle_idx] -
+        R0^2 / (2 * (R - R0))
+      B_vec[n_vals >= R] <- (R + R0) / 2
+      
+      log_terms <- th * B_vec - lgamma(n_vals + 1)
+      m <- max(log_terms)
+      log_sum <- m + log(sum(exp(log_terms - m)))
+      
+      return(log_sum)
+    }, error = function(e) {
+      return(log(1e10))
+    })
   }
   
-  B_sublinear <- function(x) {
-    return(B(x, R0=0, R = max(X)))  # R0 is set as 0
-  }
-  D_sublinear <- function(theta) {
-    return(LogNormalizing_spgm(theta, R0=0, R = max(X)))
+  # ===== Wrapped versions for batch use =====
+  R0 <- 0
+  R <- max(X)
+  
+  B_sublinear <- function(x) B(x, R0, R)
+  
+  D_sublinear <- function(theta_vec) {
+    sapply(theta_vec, function(th) LogNormalizing_spgm(th, R0, R))
   }
   
-  # optimization target 
+  # ===== Objective function for nodewise regression =====
   neg_loglik_l1_qpgm <- function(beta, x, y, lambda) {
-    eta <- x %*% beta
-    loglik <- sum(B_sublinear(y) * eta - log(factorial(y)) - D_sublinear(eta))
+    eta <- as.vector(x %*% beta)
+    d_val <- D_sublinear(eta)
+    b_val <- B_sublinear(y)
+    
+    # Fallback for numerical problems
+    if (any(is.nan(d_val)) || any(is.infinite(d_val)) || any(is.na(d_val)) ||
+        any(is.nan(b_val)) || any(is.infinite(b_val)) || any(is.na(b_val))) {
+      return(1e10)
+    }
+    
+    loglik <- sum(b_val * eta - log(factorial(y)) - d_val)
     penalty <- lambda * sum(abs(beta))
-    return(-loglik + penalty)
+    out <- -loglik + penalty
+    
+    if (!is.finite(out)) return(1e10)
+    return(out)
   }
   
-  # prepare params
-  p <- ncol(X); n <- nrow(X)
+  # ===== Main optimization loop =====
+  p <- ncol(X)
+  n <- nrow(X)
   THETA <- matrix(0, nrow = p, ncol = p)
+  
   for (s in 1:p) {
-    cat(paste0("Training node ", s, " out of ", p," nodes... Progress = ", round(s/p*100,2), "%\n"))
+    cat(sprintf("Training node %d out of %d nodes... Progress = %.2f%%\n", s, p, s/p * 100))
     flush.console()
-    # prepare data
+    
     X_others <- X[, -s]
     Y <- X[, s]
-    # fit node-conditional distribution
-    converged <- FALSE; maxit <- 200
-    while(!converged){
+    
+    converged <- FALSE
+    maxit <- 200
+    while (!converged) {
       maxit <- maxit * 2
       fit <- optim(
-        par = rep(0, p-1),
-        fn = neg_loglik_l1,
+        par = rep(0, p - 1),
+        fn = neg_loglik_l1_qpgm,
         x = X_others,
         y = Y,
         lambda = lambda,
-        method = "BFGS",  # or "L-BFGS-B" for box constraints
+        method = "BFGS",
         control = list(maxit = maxit)
       )
-      converged <- ifelse(fit$convergence==0, TRUE, FALSE)
-      if (!converged){
-        message(paste0("Not converging, training at maxit=",maxit*2))
+      converged <- (fit$convergence == 0)
+      if (!converged) {
+        message(sprintf("Not converging, increasing maxit to %d", maxit))
       }
     }
-    # append value to THETA
-    THETA[s, ] <- THETA[s, ] + append(fit$par, 0, after = s-1)
-    THETA[, s] <- THETA[, s] + append(fit$par, 0, after = s-1) # symmetry
+    
+    THETA[s, ] <- THETA[s, ] + append(fit$par, 0, after = s - 1)
+    THETA[, s] <- THETA[, s] + append(fit$par, 0, after = s - 1)  # symmetric
   }
-  # print(THETA)
-  # THETA <- (THETA>threshold) + 0
+  
+  # Optional binarization of edges
+  # THETA_bin <- (abs(THETA) > threshold) * 1
+  
   return(THETA)
 }

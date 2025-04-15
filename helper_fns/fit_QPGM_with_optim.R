@@ -29,7 +29,7 @@ fit_Quadratic_Poisson_Graphical_Model_optim <- function(X, lambda, threshold = 1
       maxit <- maxit * 2
       fit <- optim(
         par = rep(0, p-1),
-        fn = neg_loglik_l1,
+        fn = neg_loglik_l1_qpgm,
         x = X_others,
         y = Y,
         lambda = lambda,
