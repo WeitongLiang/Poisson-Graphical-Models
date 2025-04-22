@@ -12,8 +12,8 @@ library(grid)
 set.seed(1)
 
 ## ===== Set work directory =====
-setwd("~/Documents/Duke University/Courses/STA 841 Categotrical Data Analysis/Poisson-Graphical-Models")
-purrr::walk(list.files("./PGM_from_zero/helper_fns/", pattern = "*.R$", full.names=TRUE), source,.GlobalEnv)
+setwd("C:/Users/30604/Desktop/Duke/STAT_841/Poisson-Graphical-Models")
+purrr::walk(list.files("./helper_fns/", pattern = "*.R$", full.names=TRUE), source,.GlobalEnv)
 
 # ===== Simulation =====
 results_list <- list()  # storage model performance result

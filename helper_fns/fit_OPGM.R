@@ -18,7 +18,7 @@ fit_Original_Poisson_Graphical_Model <- function(X, lambda) {
       standardize = TRUE
     )
     coefs <- as.vector(coef(fit))[-1]  # Remove intercept
-    adjacency[s, -s] <- (abs(coefs) > 1e-6) * 1
+    adjacency[s, -s] <- (abs(coefs) > 1e-6*p) * 1
   }
   # make adjacency symmetric
   adjacency <- adjacency + t(adjacency)

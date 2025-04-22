@@ -23,5 +23,5 @@ p <- nrow(brca)
 X <- t(as.matrix(brca))
 
 # ===== Fit QPGM and SPGM with optim() =====
-#THETA_qpgm <- fit_Quadratic_Poisson_Graphical_Model_optim(X = X, lambda = 1e3)
-THETA_spgm <- fit_Sublinear_Poisson_Graphical_Model_optim(X = X, lambda = sqrt(log(353))/445)
+THETA_qpgm <- fit_Quadratic_Poisson_Graphical_Model_optim(X = X, lambda = 1e3)
+#THETA_spgm <- fit_Sublinear_Poisson_Graphical_Model_optim(X = X, lambda = sqrt(log(353))/445)
