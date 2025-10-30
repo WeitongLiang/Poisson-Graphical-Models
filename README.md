@@ -41,7 +41,7 @@ We applied QPGM and SPGM to breast cancer miRNA expression data from **TCGA** (n
 
 ---
 
-## ⚙️ Code and Implementation
+## Code and Implementation
 
 All code is written in base R and includes:
 
@@ -55,7 +55,7 @@ We avoided relying on the `XMRF` package due to its numerical instability and re
 
 ---
 
-## 📚 References
+## References
 
 1. Baxter, M. (1990). Generalised linear models, by P. McCullagh and J.A. Nelder. *The Mathematical Gazette*, 74(469), 320–321.  
 2. Besag, J. (1974). Spatial interaction and the statistical analysis of lattice systems. *J. R. Stat. Soc. Series B (Methodological)*, 36(2), 192–225.  
